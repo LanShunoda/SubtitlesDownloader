@@ -12,7 +12,12 @@ public enum LANGUAGES {
     FR("fre"),
     DE("ger"),
     PL("pol"),
-    TR("tur");
+    TR("tur"),
+    CH("chi"),
+    HI("hin"),
+    AR("ara"),
+    BE("ben"),
+    JA("jpn");
 
     private String language;
 

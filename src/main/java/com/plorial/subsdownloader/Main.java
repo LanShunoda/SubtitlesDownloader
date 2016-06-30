@@ -52,7 +52,7 @@ public class Main {
                     if (subs.size() > 0) {
                         System.out.println("serial " + serial + " Season " + entry.getKey() + " Episode " + j +" lang " + subs.get(0).getLanguage());
                         String downloadedZip = Downloader.downloadFromUrl(subs.get(0).getZipDownloadLink(), subs.get(0).getFileName());
-                        unzipedFiles.add(Downloader.unzipFile(downloadedZip, "/home/plorial/Documents/Exoro/" + serial + "/season " +  entry.getKey() + "/episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
+                        unzipedFiles.add(Downloader.unzipFile(downloadedZip, "/home/plorial/Documents/Exoro/" + serial + "/Season " +  entry.getKey() + "/Episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
                     }
                 }
                 Downloader.zipFiles("/home/plorial/Documents/Exoro/"+ serial + "/Season " +  entry.getKey() + "/Episode " + j + "/" + serial + "_s_" +  entry.getKey() + "_e_" + j + ".zip", unzipedFiles.toArray(new String[unzipedFiles.size()]));
