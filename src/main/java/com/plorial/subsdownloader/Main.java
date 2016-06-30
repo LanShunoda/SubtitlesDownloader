@@ -9,9 +9,7 @@ import org.apache.xmlrpc.XmlRpcException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by plorial on 6/30/16.
@@ -28,18 +26,37 @@ public class Main {
         OpenSubtitles subtitles = new OpenSubtitlesImpl(url);
         subtitles.login(LOGIN,PASS,"eng",USER_AGENT);
 
-        ArrayList<String> unzipedFiles = new ArrayList<>();
+        Map<Integer,  Integer> seasons= new HashMap<>();
+        seasons.put(1,10);
+        seasons.put(2,10);
+        seasons.put(3,10);
+        seasons.put(4,10);
+        seasons.put(5,10);
+        seasons.put(6,10);
 
-        for (int i =0 ; i < LANGUAGES.values().length; i++){
-            List<SubtitleInfo> subs = subtitles.searchSubtitles(LANGUAGES.values()[i].toString(), "Game of Thrones", "1", "1");
-            System.out.println(LANGUAGES.values()[i].toString());
-            if(subs.size() > 0) {
-                System.out.println(subs.get(0).getLanguage());
-                String downloadedZip = Downloader.downloadFromUrl(subs.get(0).getZipDownloadLink(),subs.get(0).getFileName());
-                unzipedFiles.add(Downloader.unzipFile(downloadedZip,"/home/plorial/Documents/Exoro/Game of Thrones/season 1",subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
+        downloadSerial("Game of Thrones",seasons,subtitles);
+    }
 
+    private static void downloadSerial(String serial, Map<Integer, Integer> seasons, OpenSubtitles subtitles){
+        for(Map.Entry<Integer,Integer> entry : seasons.entrySet()) {
+            int episodes = entry.getValue();
+            for(int j = 1; j < episodes+1; j++) {
+                ArrayList<String> unzipedFiles = new ArrayList<>();
+                for (int i = 0; i < LANGUAGES.values().length; i++) {
+                    List<SubtitleInfo> subs = null;
+                    try {
+                        subs = subtitles.searchSubtitles(LANGUAGES.values()[i].toString(), serial, entry.getKey().toString(), String.valueOf(j));
+                    } catch (XmlRpcException e) {
+                        e.printStackTrace();
+                    }
+                    if (subs.size() > 0) {
+                        System.out.println("serial " + serial + " Season " + entry.getKey() + " Episode " + j +" lang " + subs.get(0).getLanguage());
+                        String downloadedZip = Downloader.downloadFromUrl(subs.get(0).getZipDownloadLink(), subs.get(0).getFileName());
+                        unzipedFiles.add(Downloader.unzipFile(downloadedZip, "/home/plorial/Documents/Exoro/" + serial + "/season " +  entry.getKey() + "/episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
+                    }
+                }
+                Downloader.zipFiles("/home/plorial/Documents/Exoro/"+ serial + "/Season " +  entry.getKey() + "/Episode " + j + "/" + serial + "_s_" +  entry.getKey() + "_e_" + j + ".zip", unzipedFiles.toArray(new String[unzipedFiles.size()]));
             }
         }
-        Downloader.zipFiles("/home/plorial/Documents/Exoro/Game of Thrones/season 1/Got_s1e1.zip", unzipedFiles.toArray(new String[unzipedFiles.size()]));
     }
 }
