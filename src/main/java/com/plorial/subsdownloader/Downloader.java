@@ -98,7 +98,7 @@ public class Downloader {
         return zipFile;
     }
 
-    public static void zipFiles(String zipName, String[] srcFiles){
+    public static String zipFiles(String zipName, String[] srcFiles){
         FileOutputStream fos = null;
         ZipOutputStream zos = null;
         FileInputStream fis = null;
@@ -152,5 +152,6 @@ public class Downloader {
                 e.printStackTrace();
             }
         }*/
+        return zipName;
     }
 }
