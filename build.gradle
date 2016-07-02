@@ -12,4 +12,8 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'com.github.wtekiela:opensub4j:0.1.2'
+    compile 'com.google.firebase:firebase-server-sdk:[3.0.0,)'
+    compile 'com.google.cloud:gcloud-java:0.2.4'
+
 }
+
