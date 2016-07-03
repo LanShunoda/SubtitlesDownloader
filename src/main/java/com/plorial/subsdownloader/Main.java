@@ -34,6 +34,7 @@ public class Main {
     public static final String BUCKET = "exoro-player.appspot.com";
 
     private static Storage storage;
+    private static DatabaseReference dbRef;
 
     public static void main(String[] args) throws MalformedURLException, XmlRpcException, InterruptedException {
         URL url = new URL(URL);
@@ -51,7 +52,7 @@ public class Main {
         }
         FirebaseApp.initializeApp(options);
 
-        DatabaseReference ref = FirebaseDatabase
+        dbRef = FirebaseDatabase
                 .getInstance()
                 .getReference("Series");
 
@@ -84,11 +85,12 @@ public class Main {
         Storage.Objects.Insert insertObject = storage.objects().insert(bucket, null, mediaContent);
 
             insertObject.setName(name);
+            insertObject.setPredefinedAcl("publicRead");
 
         if (mediaContent.getLength() > 0 && mediaContent.getLength() <= 2 * 1000 * 1000 /* 2MB */) {
             insertObject.getMediaHttpUploader().setDirectUploadEnabled(true);
         }
-            return insertObject.execute().getSelfLink();
+            return insertObject.execute().getMediaLink();
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -124,6 +126,7 @@ public class Main {
                 try {
                     String link = upload(new FileInputStream(zip),zip.length(), "Series/" + serial + "/Season "+  entry.getKey() + "/" + zip.getName(),BUCKET );
                     System.out.println(link);
+                    dbRef.child(serial + "/Season " +  entry.getKey() + "/Episode " + j).setValue(link);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
