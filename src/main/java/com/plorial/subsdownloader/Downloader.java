@@ -1,8 +1,11 @@
 package com.plorial.subsdownloader;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -153,5 +156,19 @@ public class Downloader {
             }
         }*/
         return zipName;
+    }
+
+    public static String writeStringToFile(String content, String outputFolder, String fileName){
+        File folder = new File(outputFolder);
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        File newFile = new File(outputFolder, fileName);
+        try {
+            FileUtils.writeStringToFile(newFile,content, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return newFile.getAbsolutePath();
     }
 }

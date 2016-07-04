@@ -2,6 +2,7 @@ package com.plorial.subsdownloader;
 
 import com.github.wtekiela.opensub4j.api.OpenSubtitles;
 import com.github.wtekiela.opensub4j.impl.OpenSubtitlesImpl;
+import com.github.wtekiela.opensub4j.response.SubtitleFile;
 import com.github.wtekiela.opensub4j.response.SubtitleInfo;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.storage.Storage;
@@ -103,7 +104,7 @@ public class Main {
         return null;
     }
 
-    private static void downloadSerial(String serial, Map<Integer, Integer> seasons, OpenSubtitles subtitles){
+    private static void downloadSerial(String serial, Map<Integer, Integer> seasons, OpenSubtitles subtitles) throws XmlRpcException {
         for(Map.Entry<Integer,Integer> entry : seasons.entrySet()) {
             int episodes = entry.getValue();
             for(int j = 1; j < episodes+1; j++) {
@@ -117,8 +118,11 @@ public class Main {
                     }
                     if (subs.size() > 0) {
                         System.out.println(serial + " Season " + entry.getKey() + " Episode " + j +" lang " + subs.get(0).getLanguage());
-                        String downloadedZip = Downloader.downloadFromUrl(subs.get(0).getZipDownloadLink(), subs.get(0).getFileName());
-                        unzipedFiles.add(Downloader.unzipFile(downloadedZip, "/home/plorial/Documents/Exoro/" + serial + "/Season " +  entry.getKey() + "/Episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
+//                        String downloadedZip = Downloader.downloadFromUrl(subs.get(0).getZipDownloadLink(), subs.get(0).getFileName());
+                        SubtitleFile subtitleFile = subtitles.downloadSubtitles(subs.get(0).getSubtitleFileId()).get(0);
+                        String subFile = subtitleFile.getContentAsString(subs.get(0).getSubEncoding());
+//                        unzipedFiles.add(Downloader.unzipFile(downloadedZip, "/home/plorial/Documents/Exoro/" + serial + "/Season " +  entry.getKey() + "/Episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
+                        unzipedFiles.add(Downloader.writeStringToFile(subFile, "/home/plorial/Documents/Exoro/" + serial + "/Season " +  entry.getKey() + "/Episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat()));
                     }
                 }
                 String zipFile = Downloader.zipFiles("/home/plorial/Documents/Exoro/"+ serial + "/Season " +  entry.getKey() + "/Episode " + j + "/" + serial + "_s_" +  entry.getKey() + "_e_" + j + ".zip", unzipedFiles.toArray(new String[unzipedFiles.size()]));

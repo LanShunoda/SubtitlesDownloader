@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../opensub4j/demo/demo.iml" filepath="$PROJECT_DIR$/../opensub4j/demo/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../opensub4j/opensub4j.iml" filepath="$PROJECT_DIR$/../opensub4j/opensub4j.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../opensub4j/source/source.iml" filepath="$PROJECT_DIR$/../opensub4j/source/source.iml" />
       <module fileurl="file://$PROJECT_DIR$/subs.iml" filepath="$PROJECT_DIR$/subs.iml" />
     </modules>
   </component>
