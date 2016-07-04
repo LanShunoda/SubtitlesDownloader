@@ -133,19 +133,17 @@ public class Downloader {
                 zos.closeEntry();
 
                 // close the InputStream
-                fis.close();
+//                fis.close();
             }
             // close the ZipOutputStream
-            zos.close();
+//            zos.close();
         }
         catch (IOException ioe) {
             System.out.println("Error creating zip file: " + ioe);
-        }/*finally {
+        }finally {
             try {
-                if (fos != null) {
-                    fos.close();
-                }
                 if (zos != null) {
+                    zos.closeEntry();
                     zos.close();
                 }
                 if (fis != null ) {
@@ -154,7 +152,7 @@ public class Downloader {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
         return zipName;
     }
 
@@ -164,7 +162,11 @@ public class Downloader {
             folder.mkdir();
         }
         File newFile = new File(outputFolder, fileName);
+        new File(newFile.getParent()).mkdirs();
         try {
+            if(!newFile.exists()){
+                newFile.createNewFile();
+            }
             FileUtils.writeStringToFile(newFile,content, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
