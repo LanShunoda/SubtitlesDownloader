@@ -14,8 +14,6 @@ dependencies {
 //    compile 'com.github.wtekiela:opensub4j:0.1.2'
     compile 'com.google.firebase:firebase-server-sdk:[3.0.0,)'
     compile 'com.google.cloud:gcloud-java:0.2.4'
-// https://mvnrepository.com/artifact/org.codehaus.guessencoding/guessencoding
     compile group: 'org.codehaus.guessencoding', name: 'guessencoding', version: '1.4'
-    // https://mvnrepository.com/artifact/org.apache.xmlrpc/xmlrpc-client
 }
 

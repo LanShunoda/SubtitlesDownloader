@@ -16,10 +16,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by plorial on 6/30/16.
@@ -68,53 +65,53 @@ public class Main {
             e.printStackTrace();
         }
 
-        Map<Integer,  Integer> seasons= new HashMap<>();
-        seasons.put(1,7);
-        seasons.put(2,13);
-        seasons.put(3,13);
-        seasons.put(4,13);
-        seasons.put(5,16);
+        Map<Integer,  Integer> seasons= new TreeMap<>();
+//        seasons.put(1,6);
+//        seasons.put(2,15);
+//        seasons.put(3,10);
+//        seasons.put(4,10);
+//        seasons.put(5,13);
+//        seasons.put(6,13);
+//        seasons.put(7,14);
+//        seasons.put(8,25);
+//        seasons.put(9,25);
+//        seasons.put(10,23);
+//        seasons.put(11,22);
+//        seasons.put(12,21);
+//        seasons.put(13,22);
+//        seasons.put(14,22);
+//        seasons.put(15,22);
+//        seasons.put(16,21);
+//        seasons.put(17,22);
+//        seasons.put(18,22);
+//        seasons.put(19,20);
+//        seasons.put(20,21);
+//        seasons.put(21,23);
+//        seasons.put(22,22);
+//        seasons.put(23,22);
+//        seasons.put(24,22);
+//        seasons.put(25,22);
+//        seasons.put(26,22);
+//        seasons.put(27,22);
+//        seasons.put(28,2);
 
         try {
-            subtitles.login(LOGIN[login_counter],PASS[login_counter],"eng",USER_AGENT);
-            downloadSerial("Firefly",seasons);
+            subtitles.login(
+                    LOGIN[login_counter],PASS[login_counter],
+                    "eng",USER_AGENT);
+            downloadSerial("Fear the Walking Dead",seasons);
         } catch (XmlRpcException e) {
             e.printStackTrace();
         }
     }
 
-    private static String upload(FileInputStream stream, long byteCount, String name, String bucket){
-        InputStream inputStream = stream;
-        try {
-        InputStreamContent mediaContent = new InputStreamContent("application/octet-stream", inputStream);
-
-        mediaContent.setLength(byteCount);
-
-        Storage.Objects.Insert insertObject = storage.objects().insert(bucket, null, mediaContent);
-
-            insertObject.setName(name);
-            insertObject.setPredefinedAcl("publicRead");
-
-        if (mediaContent.getLength() > 0 && mediaContent.getLength() <= 2 * 1000 * 1000 /* 2MB */) {
-            insertObject.getMediaHttpUploader().setDirectUploadEnabled(true);
-        }
-            return insertObject.execute().getMediaLink();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
     private static void downloadSerial(String serial, Map<Integer, Integer> seasons) throws XmlRpcException {
         for(Map.Entry<Integer,Integer> entry : seasons.entrySet()) {
             int episodes = entry.getValue();
-            for(int j = 1; j < episodes+1; j++) {
+            for(
+                    int j = 1; j < episodes+1; j++
+//                    int j = episodes; j > 9; j--
+                    ) {
                 ArrayList<String> unzipedFiles = new ArrayList<>();
                 for (int i = 0; i < LANGUAGES.values().length; i++) {
                     List<SubtitleInfo> subs = null;
@@ -132,8 +129,8 @@ public class Main {
                             String filePath = Downloader.writeStringToFile(subFile, "/home/plorial/Documents/Exoro/" + serial + "/Season " +  entry.getKey() + "/Episode " + j, subs.get(0).getLanguage() + "." + subs.get(0).getFormat());
                             unzipedFiles.add(filePath);
                             download_counter++;
-                            System.out.println("downloaded " + download_counter);
-                            if(download_counter == 199 ){
+                            System.out.println("downloaded " + download_counter + " (login " + login_counter + ")");
+                            if(download_counter == 200 ){
                                 login_counter++;
                                 if(login_counter == 5){return;}
                                 subtitles.logout();
@@ -151,11 +148,40 @@ public class Main {
                 try {
                     String link = upload(new FileInputStream(zip),zip.length(), "Series/" + serial + "/Season "+  entry.getKey() + "/" + zip.getName(),BUCKET );
                     System.out.println(link);
-                    dbRef.child(serial + "/Season " +  entry.getKey() + "/Episode " + j).setValue(link);
+                    String serial_name = serial.replace(".", "")/*.replace("'","")*/;
+                    dbRef.child(serial_name + "/Season " +  entry.getKey() + "/Episode " + j).setValue(link);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private static String upload(FileInputStream stream, long byteCount, String name, String bucket){
+        InputStream inputStream = stream;
+        try {
+            InputStreamContent mediaContent = new InputStreamContent("application/octet-stream", inputStream);
+
+            mediaContent.setLength(byteCount);
+
+            Storage.Objects.Insert insertObject = storage.objects().insert(bucket, null, mediaContent);
+
+            insertObject.setName(name);
+            insertObject.setPredefinedAcl("publicRead");
+
+            if (mediaContent.getLength() > 0 && mediaContent.getLength() <= 2 * 1000 * 1000 /* 2MB */) {
+                insertObject.getMediaHttpUploader().setDirectUploadEnabled(true);
+            }
+            return insertObject.execute().getMediaLink();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
