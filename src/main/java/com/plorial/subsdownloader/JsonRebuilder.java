@@ -17,25 +17,25 @@ import java.util.*;
 public class JsonRebuilder {
     public static void main(String[] args) {
         try {
-            JSONTokener tokener = new JSONTokener(new FileReader("/home/plorial/Documents/Exoro_backup/exoro-player-export.json"));
+            JSONTokener tokener = new JSONTokener(new FileReader("/home/plorial/Documents/Exoro_backup/exoro-player-export-friends-backup.json"));
             JSONObject series = new JSONObject(tokener).getJSONObject("Series");
             Set<String> seriesArray = series.keySet();
-            Map<String,JSONObject> resultSeries = new TreeMap<>();
+            TreeMap<String,JSONObject> resultSeries = new TreeMap<>();
             for (String seriesName : seriesArray) {
                 JSONObject serial = series.getJSONObject(seriesName);
                 Set<String> seasons = serial.keySet();
-                Map<String,JSONObject> resultSeasons = new TreeMap<>();
+                TreeMap<String,JSONObject> resultSeasons = new TreeMap<>();
                 for (String season : seasons) {
                     JSONObject seasonJson = serial.getJSONObject(season);
                    Set<String> episodes =  seasonJson.keySet();
-                    Map<String,JSONObject> resultEpisodes = new TreeMap<>();
+                    TreeMap<String,JSONObject> resultEpisodes = new TreeMap<>();
                     for (String episode : episodes) {
                         if(episode.equals("zzz_urls") | episode.equals("zzz_video_urls")){
 
                         }else {
                             String subUrl = seasonJson.getString(episode);
                             System.out.println(subUrl);
-                            Map<String, String> map = new TreeMap<>();
+                            TreeMap<String, String> map = new TreeMap<>();
                             map.put("srt", subUrl);
                             map.put("id", "");
                             JSONObject episodJson = new JSONObject(map);
@@ -50,7 +50,7 @@ public class JsonRebuilder {
             TreeMap<String, JSONObject> r = new TreeMap<>();
             r.put("Series", new JSONObject(resultSeries));
             JSONObject result = new JSONObject(r);
-            File resultFile = new File("/home/plorial/Documents/Exoro_backup/exoro_rebuild.json");
+            File resultFile = new File("/home/plorial/Documents/Exoro_backup/exoro_friends_rebuild.json");
             Writer writer = null;
             if(!resultFile.exists()){
                 resultFile.createNewFile();

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../opensub4j/demo/build/libs/opensub4j-demo-0.1.3-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../opensub4j/demo/build/libs/opensub4j-demo-0.1.3-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../opensub4j/demo/build/libs/opensub4j-demo-0.1.3-SNAPSHOT-sources.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

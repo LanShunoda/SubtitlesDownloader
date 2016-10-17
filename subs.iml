@@ -97,6 +97,8 @@
     <orderEntry type="library" name="Gradle: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.api-client:google-api-client:1.22.0" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.guessencoding:guessencoding:1.4" level="project" />
-    <orderEntry type="module" module-name="source" />
+    <orderEntry type="library" name="opensub4j-0.1.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="org.slf4j:slf4j-ext:1.7.7" level="project" />
   </component>
 </module>
